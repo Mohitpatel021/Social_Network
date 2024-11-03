@@ -30,3 +30,7 @@ spring:
       mail.smtp.timeout: 3000
       mail.smtp.writetimeout: 5000
       mail.smtp.trust: "*"
+
+application:
+  file:
+    photos-output-path: ./uploads
