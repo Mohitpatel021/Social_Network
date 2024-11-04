@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedBackController {
 
     private final FeedbackService service;
+
     @PostMapping()
     public ResponseEntity<?>saveFeedBack(@Valid @RequestBody FeedBackRequest request, Authentication connectedUser){
         return ResponseEntity.ok(service.save(request, connectedUser));
