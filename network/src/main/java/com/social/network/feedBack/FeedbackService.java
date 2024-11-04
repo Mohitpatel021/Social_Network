@@ -26,7 +26,6 @@ public class FeedbackService {
         if (!Objects.equals(book.getOwner().getId(), user.getId())) {
             throw new OperationNotPermittedException("You cannot give a feedback to your own book :: " + book.getTitle());
         }
-
         Feedback feedback=feedbackMapper.toFeedback(request);
         return feedbackRepository.save(feedback).getId();
     }
