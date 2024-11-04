@@ -5,10 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("feedbacks")
@@ -21,5 +18,9 @@ public class FeedBackController {
     @PostMapping()
     public ResponseEntity<?>saveFeedBack(@Valid @RequestBody FeedBackRequest request, Authentication connectedUser){
         return ResponseEntity.ok(service.save(request, connectedUser));
+    }
+    @GetMapping("/{feedback-id}")
+    public ResponseEntity<?>findFeedbackById(@PathVariable("feedback-id") Integer feedbackId,Authentication connectedUser){
+        return ResponseEntity.ok(service.findFeedbackById(feedbackId));
     }
 }
