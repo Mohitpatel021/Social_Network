@@ -16,11 +16,21 @@ public class FeedBackController {
     private final FeedbackService service;
 
     @PostMapping()
-    public ResponseEntity<?>saveFeedBack(@Valid @RequestBody FeedBackRequest request, Authentication connectedUser){
+    public ResponseEntity<?> saveFeedBack(@Valid @RequestBody FeedBackRequest request, Authentication connectedUser) {
         return ResponseEntity.ok(service.save(request, connectedUser));
     }
+
     @GetMapping("/{feedback-id}")
-    public ResponseEntity<?>findFeedbackById(@PathVariable("feedback-id") Integer feedbackId,Authentication connectedUser){
+    public ResponseEntity<?> findFeedbackById(@PathVariable("feedback-id") Integer feedbackId, Authentication connectedUser) {
         return ResponseEntity.ok(service.findFeedbackById(feedbackId));
+    }
+
+    @GetMapping("/book/{book-id}")
+    public ResponseEntity<?> findAllFeedbackByBook(@PathVariable("book-id") Integer bookId,
+                                                   @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                                   @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+                                                   Authentication connectedUser
+    ) {
+        return ResponseEntity.ok(service.findAllFeedbacksByBook(bookId, page, size, connectedUser));
     }
 }
