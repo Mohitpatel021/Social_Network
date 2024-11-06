@@ -22,6 +22,7 @@ public class FeedbackService {
     private final BookRepository bookRepository;
     private final FeedBackMapper feedbackMapper;
     private final FeedBackRepository feedbackRepository;
+
     public Integer save(FeedBackRequest request, Authentication connectedUser) {
         Book book = bookRepository.findById(request.bookId()).orElseThrow(() -> new EntityNotFoundException("Book not found :: " + request.bookId()));
         if (book.isArchived() || !book.isShareable()) {
@@ -31,7 +32,7 @@ public class FeedbackService {
         if (!Objects.equals(book.getOwner().getId(), user.getId())) {
             throw new OperationNotPermittedException("You cannot give a feedback to your own book :: " + book.getTitle());
         }
-        Feedback feedback=feedbackMapper.toFeedback(request);
+        Feedback feedback = feedbackMapper.toFeedback(request);
         return feedbackRepository.save(feedback).getId();
     }
 
@@ -40,11 +41,19 @@ public class FeedbackService {
     }
 
     public PageResponse<FeedBackResponse> findAllFeedbacksByBook(Integer bookId, int page, int size, Authentication connectedUser) {
-        Pageable pageable= PageRequest.of(page,size);
-        User user=((User)connectedUser.getPrincipal());
-        Page<Feedback> feedbacks=feedbackRepository.findAllByBookId(bookId,pageable);
-        List<FeedBackResponse> feedBackResponses=feedbacks.stream()
-                .map(f-> feedbackMapper.toFeedbackResponse(f,user.getId())).toList();
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        User user = ((User) connectedUser.getPrincipal());
+        Page<Feedback> feedbacks = feedbackRepository.findAllByBookId(bookId, pageable);
+        List<FeedBackResponse> feedBackResponses = feedbacks.stream()
+                .map(f -> feedbackMapper.toFeedbackResponse(f, user.getId())).toList();
+        return new PageResponse<>(
+                feedBackResponses,
+                feedbacks.getNumber(),
+                feedbacks.getSize(),
+                feedbacks.getTotalElements(),
+                feedbacks.getTotalPages(),
+                feedbacks.isFirst(),
+                feedbacks.isLast()
+        );
     }
 }
